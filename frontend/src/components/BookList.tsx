@@ -1,19 +1,25 @@
 import { useEffect, useState } from 'react';
-import { Book } from './types/Book';
+import { Book } from '../types/Book';
+import { useNavigate } from 'react-router-dom';
 
-function BookList() {
+function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<Book[]>([]);
   const [pageSize, setPageSize] = useState<number>(5); //default value 1
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<string>('asc'); //default sorting
+  const navigate = useNavigate();
 
   useEffect(() => {
     //only grabs the data when it needs to and not all the time, when there is a change
     const fetchBooks = async () => {
+      const categoryParams = selectedCategories
+        .map((cat) => `categories=${encodeURIComponent(cat)}`) //encode the URI
+        .join('&');
+
       const response = await fetch(
-        `https://localhost:5000/api/Book/AllBooks?pageHowMany=${pageSize}&pageNum=${pageNum}&sortBY=title&sortOrder=${sortOrder}`
+        `https://localhost:5000/api/Book/AllBooks?pageHowMany=${pageSize}&pageNum=${pageNum}&sortBY=title&sortOrder=${sortOrder}${selectedCategories.length ? `&${categoryParams}` : ''}`
       );
       //we can pass info on the server as we make the request
       const data = await response.json();
@@ -23,7 +29,7 @@ function BookList() {
     };
 
     fetchBooks();
-  }, [pageSize, pageNum, totalItems, sortOrder]);
+  }, [pageSize, pageNum, totalItems, sortOrder, selectedCategories]);
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -32,7 +38,6 @@ function BookList() {
 
   return (
     <>
-      <h1>Books</h1>
       <button onClick={toggleSortOrder}>
         Sort By Name ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
       </button>
@@ -65,6 +70,15 @@ function BookList() {
                 <strong>Price: </strong> {b.price}
               </li>
             </ul>
+
+            <button
+              className="btn btn-success"
+              onClick={() =>
+                navigate(`/confirm/${b.title}/${b.bookID}/${b.price}`)
+              }
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
       ))}
