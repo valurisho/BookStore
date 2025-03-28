@@ -38,53 +38,105 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
 
   return (
     <>
-      <button onClick={toggleSortOrder}>
-        Sort By Name ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
-      </button>
-      <br />
-      <br />
-      {books.map((b) => (
-        <div id="bookCard" className="card" key={b.bookID}>
-          <h3 className="card-title">{b.title}</h3>
-          <div className="card-body">
-            <ul className="list-unstyled">
-              <li>
-                <strong>Author:</strong> {b.author}
-              </li>
-              <li>
-                <strong>Publisher:</strong> {b.publisher}
-              </li>
-              <li>
-                <strong>ISBN:</strong> {b.isbn}
-              </li>
-              <li>
-                <strong>Classification:</strong> {b.classification}
-              </li>
-              <li>
-                <strong>Category:</strong> {b.category}
-              </li>
-              <li>
-                <strong>Page Count: </strong> {b.pageCount}
-              </li>
-              <li>
-                <strong>Price: </strong> {b.price}
-              </li>
-            </ul>
+      <div className="container mt-4">
+        <button className="btn btn-primary mb-3" onClick={toggleSortOrder}>
+          Sort By Name ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+        </button>
+        <br />
+        <br />
+        {books.map((b) => (
+          <div id="bookCard" className="card" key={b.bookID}>
+            <h3 className="card-title">{b.title}</h3>
+            <div className="card-body">
+              <ul className="list-unstyled">
+                <li>
+                  <strong>Author:</strong> {b.author}
+                </li>
+                <li>
+                  <strong>Publisher:</strong> {b.publisher}
+                </li>
+                <li>
+                  <strong>ISBN:</strong> {b.isbn}
+                </li>
+                <li>
+                  <strong>Classification:</strong> {b.classification}
+                </li>
+                <li>
+                  <strong>Category:</strong> {b.category}
+                </li>
+                <li>
+                  <strong>Page Count: </strong> {b.pageCount}
+                </li>
+                <li>
+                  <strong>Price: </strong> {b.price}
+                </li>
+              </ul>
 
-            <button
-              className="btn btn-success"
-              onClick={() =>
-                navigate(`/confirm/${b.title}/${b.bookID}/${b.price}`)
-              }
-            >
-              Add to Cart
-            </button>
+              <button
+                className="btn btn-success w-100"
+                onClick={() =>
+                  navigate(`/confirm/${b.title}/${b.bookID}/${b.price}`)
+                }
+              >
+                Add to Cart
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
-      <br></br>
+        ))}
+        <nav>
+          <ul className="pagination justify-content-center mt-3">
+            <li className={`page-item ${pageNum === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => setPageNum(pageNum - 1)}
+              >
+                Previous
+              </button>
+            </li>
+            {[...Array(totalPages)].map((_, index) => (
+              <li
+                className={`page-item ${pageNum === index + 1 ? 'active' : ''}`}
+                key={index + 1}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => setPageNum(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+            <li
+              className={`page-item ${pageNum === totalPages ? 'disabled' : ''}`}
+            >
+              <button
+                className="page-link"
+                onClick={() => setPageNum(pageNum + 1)}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
 
-      <button disabled={pageNum === 1} onClick={() => setPageNum(pageNum - 1)}>
+        <div className="mt-3">
+          <label className="me-2">Results per page:</label>
+          <select
+            className="form-select d-inline w-auto"
+            value={pageSize}
+            onChange={(p) => {
+              setPageSize(Number(p.target.value));
+              setPageNum(1);
+            }}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </div>
+
+      {/* <button disabled={pageNum === 1} onClick={() => setPageNum(pageNum - 1)}>
         Previous
       </button>
 
@@ -115,7 +167,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="20">20</option>
-      </select>
+      </select> */}
     </>
   );
 }

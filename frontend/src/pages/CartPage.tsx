@@ -8,30 +8,41 @@ function CartPage() {
   const totalAmount = cart.reduce((total, item) => total + item.price, 0);
 
   return (
-    <div>
-      <h2>Your Cart:</h2>
+    <div className="container">
+      <h2 className="my-4">Your Cart</h2>
       {cart.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p className="alert alert-info">Your cart is empty</p>
       ) : (
-        <ul>
-          {cart.map((item: CartItem) => {
-            console.log('Rendering item:', item);
-            return (
-              <li key={item.bookID}>
-                {item.bookName}: ${item.price} | Quantity: {item.quantity}
-                <button onClick={() => removeFromCart(item.bookID)}>
-                  Remove
-                </button>
-              </li>
-            );
-          })}
+        <ul className="list-group mb-3">
+          {cart.map((item: CartItem) => (
+            <li
+              key={item.bookID}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
+              {item.bookName}: ${item.price} | Quantity: {item.quantity}
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => removeFromCart(item.bookID)}
+              >
+                Remove
+              </button>
+            </li>
+          ))}
         </ul>
       )}
-      <h3>Total: ${totalAmount.toFixed(2)}</h3>
-      <button onClick={() => navigate('/books')}>Continue Browsing</button>
-      <button>Checkout</button>
-      <br />
-      <button onClick={() => clearCart()}>Clear Cart</button>
+      <h3 className="mb-3">Total: ${totalAmount.toFixed(2)}</h3>
+      <div className="d-flex gap-2">
+        <button
+          className="btn btn-outline-primary"
+          onClick={() => navigate('/books')}
+        >
+          Continue Browsing
+        </button>
+        <button className="btn btn-success">Checkout</button>
+      </div>
+      <button className="btn btn-warning mt-3" onClick={() => clearCart()}>
+        Clear Cart
+      </button>
     </div>
   );
 }
