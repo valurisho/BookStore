@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ConfirmPage from './pages/ConfirmPage';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
+import AdminBooksPage from './pages/AdminBooksPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               path="/confirm/:bookName/:bookID/:price"
               element={<ConfirmPage />}
             />
+            <Route path="/admin" element={<AdminBooksPage />} />
             <Route path="/cart" element={<CartPage />} />
           </Routes>
         </Router>
